@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gestión de Pedidos - Hamburguesería</title>
+<style>
+  body{
+    margin:0;
+    background: rgb(250,95,85);
+    color:#e9eef7;
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  /*titulo*/
+  header{
+    padding:16px;
+    background:#172540;
+    text-align:center;
+    font-size:29px;
+    font-weight:bolder;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+  .container{
+    max-width:900px;
+    margin:20px auto;
+    background:#141e33;
+    padding:20px;
+    border-radius:10px;
+  }
+  h2{
+    border-bottom:1px solid #334;
+    padding-bottom:6px;
+  }
+  .section{
+    margin-bottom:20px;
+  }
+  label{
+    display:block;
+    margin-bottom:6px;
+  }
+  select, input[type=text], textarea{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    background:#0b1322;
+    color:#e6eef7;
+    margin-bottom:12px;
+  }
+  button{
+    background:#00c49a;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    color:#001a12;
+    cursor:pointer;
+    font-weight:bold;
+    margin-top:10px;
+  }
+  button:hover{opacity:0.9}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:14px;
+    font-size:14px;
+  }
+  th,td{
+    padding:10px;
+    border-bottom:1px solid #23334d;
+  }
+  .total{
+    text-align:right;
+    font-size:18px;
+    margin-top:10px;
+    font-weight:bold;
+  }
+</style>
+</head>
+<body>
+<!--Titulo-->
+<header>Hamburgueseria, "El privilegio"</header>
+
+<div class="container">
+
+  <div class="section">
+    <h2>Datos del Cliente</h2>
+    <label>Nombre del Cliente:</label>
+    <input type="text" id="cliente" />
+
+    <label>Dirección de Entrega:</label>
+    <input type="text" id="direccion" />
+  </div>
+
+  <div class="section">
+    <h2>Pedido</h2>
+
+    <label>Hamburguesa:</label>
+    <select id="hamburguesa">
+      <option value="Clásica" data-precio="12000">Clásica - $12,000</option>
+      <option value="Doble" data-precio="15000">Doble - $15,000</option>
+      <option value="Especial" data-precio="18000">Especial - $18,000</option>
+    </select>
+
+    <label>Bebida:</label>
+    <select id="bebida">
+      <option value="Gaseosa" data-precio="5000">Gaseosa - $5,000</option>
+      <option value="Jugo" data-precio="6000">Jugo - $6,000</option>
+      <option value="Agua" data-precio="3000">Agua - $3,000</option>
+    </select>
+
+    <label>Acompañamiento:</label>
+    <select id="acompanamiento">
+      <option value="Papas" data-precio="5000">Papas - $5,000</option>
+      <option value="Aros de cebolla" data-precio="7000">Aros de cebolla - $7,000</option>
+      <option value="Nuggets" data-precio="8000">Nuggets - $8,000</option>
+    </select>
+
+    <button onclick="agregarPedido()">Agregar Pedido</button>
+  </div>
+
+  <div class="section">
+    <h2>Pedidos Registrados</h2>
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Dirección</th>
+          <th>Hamburguesa</th>
+          <th>Bebida</th>
+          <th>Acompañamiento</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="total" id="granTotal">Total General: $0</div>
+  </div>
+
+</div>
+
+<script>
+  let totalGeneral = 0;
+
+  function agregarPedido(){
+    const cliente = document.getElementById('cliente').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const hSelect = document.getElementById('hamburguesa');
+    const bSelect = document.getElementById('bebida');
+    const aSelect = document.getElementById('acompanamiento');
+
+    if(cliente === '' || direccion === ''){
+      alert('Debe llenar el nombre y dirección');
+      return;
+    }
+
+    const hamburguesa = hSelect.options[hSelect.selectedIndex];
+    const bebida = bSelect.options[bSelect.selectedIndex];
+    const acomp = aSelect.options[aSelect.selectedIndex];
+
+    const precioH = parseInt(hamburguesa.getAttribute('data-precio'));
+    const precioB = parseInt(bebida.getAttribute('data-precio'));
+    const precioA = parseInt(acomp.getAttribute('data-precio'));
+
+    const total = precioH + precioB + precioA;
+
+    const tablaBody = document.querySelector('#tabla tbody');
+
+    const fila = document.createElement('tr');
+    fila.innerHTML = `
+      <td>${cliente}</td>
+      <td>${direccion}</td>
+      <td>${hamburguesa.value}</td>
+      <td>${bebida.value}</td>
+      <td>${acomp.value}</td>
+      <td>$${total.toLocaleString('es-CO')}</td>
+    `;
+
+    tablaBody.appendChild(fila);
+
+    totalGeneral += total;
+    document.getElementById('granTotal').textContent = `Total General: $${totalGeneral.toLocaleString('es-CO')}`;
+
+    document.getElementById('cliente').value = '';
+    document.getElementById('direccion').value = '';
+  }
+</script>
+
+</body>
+</html>
